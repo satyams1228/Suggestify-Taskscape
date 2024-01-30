@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
+
+    #tooDo {
+      width: 300px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin: 50px auto;
+    }
+
+    #tooDo h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #tooDo a {
+      display: block;
+      text-align: center;
+      color: #4CAF50;
+      text-decoration: none;
+    }
+  </style>
+  <title>Dashboard</title>
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, post-check=0, pre-check=0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+</head>
+<body>
+  <div id="tooDo" class="container">
+    <h1>Welcome to the Dashboard, <%= username %></h1>
+    <p>This is your secure area. You are logged in!</p>
+    <a href="/auth/logout">Logout</a>
+  </div>
+
+  <form action="/auth/addTask" method="post">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required>
+    
+    <button type="submit">Add Task</button>
+  </form>
+
+   <!-- Display existing tasks -->
+   <ul>
+    <% tasks.forEach((task, index) => { %>
+      <li>
+        <strong>Title:</strong> <%= task.title %>, 
+        <span><strong>Recommendation:</strong> <%= recommendations[index] || 'No recommendation available' %></span>
+        <!-- Add button to trigger the edit form -->
+        <button onclick="openEditForm('<%= task._id %>', '<%= task.title %>')">Edit</button>
+        <!-- Button to delete the task -->
+        <a href="/auth/deleteTask/<%= task._id %>">Delete</a>
+      </li>
+    <% }); %>
+  </ul>
+  
+  
+   
+  <!-- Form for editing tasks (initially hidden) -->
+  <form id="editForm" action="/auth/editTask" method="post" style="display: none;">
+    <input type="hidden" id="editTaskId" name="taskId">
+    <label for="editTitle">Title:</label>
+    <button type="submit">Save Changes</button>
+  </form>
+  
+  <script>
+    // Function to open the edit form with task details
+    function openEditForm(taskId, title, deadline, importance, urgency, status) {
+      document.getElementById('editTaskId').value = taskId;
+      document.getElementById('editTitle').value = title;
+      document.getElementById('editDeadline').value = deadline;
+      document.getElementById('editImportance').value = importance;
+      document.getElementById('editUrgency').value = urgency;
+      document.getElementById('editStatus').value = status;
+  
+      document.getElementById('editForm').style.display = 'block';
+    }
+  </script>
+  
+   
+  
+  
+
+  <a href="/auth/logout">Logout</a>
+
+
+  <script>  window.onload = function () {
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href);
+    }
+  }</script>
+</body>
+</html>
